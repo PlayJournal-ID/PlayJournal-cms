@@ -24,6 +24,10 @@
     					<ul class="nav">
     						<li @{if(section.equals("home")) "class=active"}><a href="@routes.Application.index">Home</a></li>
     					</ul>
+    					
+    					<ul class="nav pull-right">
+    						<li @{if(section.equals("signup")) "class=active"}><a href="@routes.Authentication.signup">Sign Up</a></li>
+    					</ul>
     				</div>
     			</div>
     		</div>
