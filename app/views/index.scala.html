@@ -1,7 +1,7 @@
-@(message: String)
+@(message: String)(implicit request: play.api.mvc.RequestHeader)
 
-@main("Welcome to Play 2.0") {
-    
-    @play20.welcome(message)
-    
+@main("Welcome to PlayJournal") {
+    <div class="hero-unit">
+    	<h1>@message</h1>
+    </div>
 }
