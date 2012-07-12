@@ -30,8 +30,15 @@ object Authentication extends Controller {
         signupForm.bindFromRequest.fold (
             formWithErrors => BadRequest(html.authentication.signup(formWithErrors)),
             user => {
-                Users.create(user)
-                Redirect(routes.Application.index)
+                try {
+                	Users.create(user)
+                	Redirect(routes.Application.index)
+                } catch {
+                    case e => {
+                        val formWithErrors = signupForm.copy(errors=Seq(FormError("email", "Email already registered. Please recheck your email."))).fill(user)
+                        BadRequest(html.authentication.signup(formWithErrors))
+                    }
+                }
             }
         )
     }
