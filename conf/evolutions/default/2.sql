@@ -3,7 +3,7 @@
 # --- !Ups
 
 CREATE TABLE privilege(
-    id bigint primary key,
+    id bigint PRIMARY KEY AUTO_INCREMENT,
     description text not null
 );
 

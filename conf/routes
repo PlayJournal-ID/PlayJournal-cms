@@ -5,5 +5,13 @@
 # Home page
 GET     /                           controllers.Application.index
 
+# Authentication and Registration
+GET    /signup                      controllers.Authentication.signup
+POST   /signup                      controllers.Authentication.signupProcess
+
+GET    /login                       controllers.Authentication.login
+POST   /login                       controllers.Authentication.authenticate
+GET    /logout                      controllers.Authentication.logout
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

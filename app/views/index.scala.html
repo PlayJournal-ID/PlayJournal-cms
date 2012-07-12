@@ -1,7 +1,13 @@
-@(message: String)
+@(message: String)(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
-@main("Welcome to Play 2.0") {
+@main("Welcome to PlayJournal") {
+	@if(flash.get("logoutSuccess").exists(_ => true)){
+    	<div class="alert alert-info">
+    		<strong>Log out Success.</strong> @flash.get("logoutSuccess")
+    	</div>
+    }
     
-    @play20.welcome(message)
-    
+    <div class="hero-unit">
+    	<h1>@message</h1>
+    </div>
 }

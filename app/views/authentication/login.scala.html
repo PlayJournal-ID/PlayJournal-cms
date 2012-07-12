@@ -1,0 +1,46 @@
+@(loginForm: Form[(String, String)])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
+
+@import helper._
+
+@implicitField = @{FieldConstructor(bootstrapInput.f)}
+
+@main("Login", "login") {
+    @if(flash.get("registration").exists(_ => true)){
+    	<div class="alert alert-info">
+    		@flash.get("registration")
+    	</div>
+    }
+    
+    @if(flash.get("unauthorized").exists(_ => true)){
+    	<div class="alert alert-warning">
+    		@flash.get("unauthorized")
+    	</div>
+    }
+
+	<div class="span5">
+		<a href="#" class="thumbnail">
+			<img src="http://placehold.it/450x300">
+		</a>
+	</div>
+	@helper.form(routes.Authentication.authenticate, 'class -> "form-horizontal span6"){
+	<fieldset>
+	<legend>Your Login Information</legend>
+	
+	@if(loginForm.hasGlobalErrors){
+		<div class="alert alert-error">
+			@loginForm.globalErrors.map { error =>
+				<strong>Error: </strong> @error.message <br>
+			}
+		</div>
+	}
+	
+	@inputText(loginForm("email"))
+	@inputPassword(loginForm("password"))
+	
+	<div class="form-actions">
+		<button type="submit" class="btn btn-primary">Login</button>
+		<button type="reset" class="btn">Clear</button>
+	</div>
+	</fieldset>
+	}
+}
