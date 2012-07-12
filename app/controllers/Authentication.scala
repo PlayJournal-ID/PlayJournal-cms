@@ -39,6 +39,8 @@ object Authentication extends Controller {
         signupForm.bindFromRequest.fold (
             formWithErrors => BadRequest(html.authentication.signup(formWithErrors)),
             user => {
+                // there will be an exception if email's already in database, hence the try-catch block.
+                // Anorm might be leaking abstraction here. Note this for future update.
                 try {
                 	Users.create(user)
                 	Redirect(routes.Authentication.login).flashing("registration" -> "Your account have been created. You can now login and start using PlayJournal.")
@@ -59,7 +61,19 @@ object Authentication extends Controller {
     def authenticate = Action { implicit request =>
         loginForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.authentication.login(formWithErrors)),
-            user => Redirect(routes.Application.index)
+            loginInfo => {
+                val user: Users = Users.findByEmail(loginInfo._1) match {
+                    case Some(u) => u
+                    // there should be no wrong email by now. It has been authenticated by Users.authenticate before!
+                    case None => throw new Exception("FATAL ERROR: Authentication.Authenticate get the wrong email.")
+                }
+                
+            	Redirect(routes.Application.index).withSession(
+            	    "id"        -> user.id.toString,
+            	    "email"     -> user.email,
+            	    "username"  -> user.name,
+            	    "privilege" -> user.privilege.toString)
+            }
         )
     }
 }
