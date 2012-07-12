@@ -6,7 +6,7 @@ import anorm.SqlParser._
 import org.apache.commons.codec.digest.DigestUtils._
 import play.api.Play.current
 
-case class Users(id: Pk[Long], email: String, password: String, name: String, privilege: Long = 2)
+case class Users(id: Pk[Long], email: String, password: String, name: String, privilege: Long = Privilege.standard)
 
 object Users {
     val simple = {
@@ -32,6 +32,12 @@ object Users {
                 .as(simple.singleOpt)
         }
     }
+    
+    def findAll(): Seq[Users] = {
+        DB.withConnection{ implicit connection =>
+            SQL("SELECT * FROM users").as(simple *)
+        }
+    }
 
     def create(user: Users) {
         DB.withConnection { implicit connection =>
@@ -41,7 +47,7 @@ object Users {
                     'password -> passwordHash(user.password, user.email),
                     'name -> user.name,
                     'privilege -> user.privilege)
-                .execute()
+                .executeInsert()
         }
     }
 }
