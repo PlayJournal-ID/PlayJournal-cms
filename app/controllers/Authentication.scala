@@ -22,6 +22,15 @@ object Authentication extends Controller {
           ((user: Users) => Some(user.id, user.email, user.password, user.name))
     )
     
+    val loginForm = Form(
+        tuple(
+            "email" -> email.verifying(nonEmpty),
+            "password" -> nonEmptyText
+        ) verifying ("Email and password do not match.", result => result match {
+            case (email, password) => Users.authenticate(email, password).isDefined
+        })
+    )
+    
     def signup = Action { implicit request =>
         Ok(html.authentication.signup(signupForm))
     }
@@ -40,6 +49,17 @@ object Authentication extends Controller {
                     }
                 }
             }
+        )
+    }
+    
+    def login = Action { implicit request => 
+        Ok(html.authentication.login(loginForm))
+    }
+    
+    def authenticate = Action { implicit request =>
+        loginForm.bindFromRequest.fold(
+            formWithErrors => BadRequest(html.authentication.login(formWithErrors)),
+            user => Redirect(routes.Application.index)
         )
     }
 }
