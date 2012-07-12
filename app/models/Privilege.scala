@@ -9,7 +9,7 @@ case class Privilege(id: Pk[Long], description: String)
 
 object Privilege {
     val simple = {
-        get[Pk[Long]]("privilge.id") ~
+        get[Pk[Long]]("privilege.id") ~
         get[String]("privilege.description") map {
             case id~description => Privilege(id, description)
         }

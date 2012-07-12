@@ -6,7 +6,7 @@ import anorm.SqlParser._
 import org.apache.commons.codec.digest.DigestUtils._
 import play.api.Play.current
 
-case class Users(id: Pk[Long], email: String, password: String, name: String, privilege: Long = 2)
+case class Users(id: Pk[Long], email: String, password: String, name: String, privilege: Long = Privilege.standard)
 
 object Users {
     val simple = {

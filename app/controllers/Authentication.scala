@@ -8,10 +8,12 @@ import play.api.data.validation.Constraints._
 
 import anorm._
 
+import controllers.helpers._
+import controllers.traits._
 import models._
 import views._
 
-object Authentication extends Controller {
+object Authentication extends Controller with Security {
     val signupForm = Form(
         mapping(
             "id" -> ignored(NotAssigned:Pk[Long]),
@@ -31,11 +33,11 @@ object Authentication extends Controller {
         })
     )
     
-    def signup = Action { implicit request =>
+    def signup = OnlyUnauthenticated { implicit request =>
         Ok(html.authentication.signup(signupForm))
     }
     
-    def signupProcess = Action { implicit request =>
+    def signupProcess = OnlyUnauthenticated { implicit request =>
         signupForm.bindFromRequest.fold (
             formWithErrors => BadRequest(html.authentication.signup(formWithErrors)),
             user => {
@@ -54,11 +56,11 @@ object Authentication extends Controller {
         )
     }
     
-    def login = Action { implicit request => 
+    def login = OnlyUnauthenticated { implicit request => 
         Ok(html.authentication.login(loginForm))
     }
     
-    def authenticate = Action { implicit request =>
+    def authenticate = OnlyUnauthenticated { implicit request =>
         loginForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.authentication.login(formWithErrors)),
             loginInfo => {
@@ -68,11 +70,7 @@ object Authentication extends Controller {
                     case None => throw new Exception("FATAL ERROR: Authentication.Authenticate get the wrong email.")
                 }
                 
-            	Redirect(routes.Application.index).withSession(
-            	    "id"        -> user.id.toString,
-            	    "email"     -> user.email,
-            	    "username"  -> user.name,
-            	    "privilege" -> user.privilege.toString)
+            	Redirect(routes.Application.index).withSession(SessionHelper.createSession(user.id.get, user.email, user.privilege): _*)
             }
         )
     }

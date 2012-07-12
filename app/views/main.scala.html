@@ -1,5 +1,7 @@
 @(title: String, section: String = "home", javascripts: Html = Html(""), stylesheets: Html = Html(""))(content: Html)(implicit request: play.api.mvc.RequestHeader)
 
+@import controllers.helpers._
+
 <!DOCTYPE html>
 
 <html>
@@ -26,7 +28,7 @@
     					</ul>
     					
     					<ul class="nav pull-right">
-    					@if(request.session.get("username").exists(_ => true)){
+    					@if(SessionHelper.isAuthenticated){
     						<li><a href="#">@request.session.get("username")</a></li>
     						<li class="divider-vertical"></li>
     						<li><a href="@routes.Authentication.logout">Log out</a></li>
