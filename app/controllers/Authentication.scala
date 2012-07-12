@@ -41,7 +41,7 @@ object Authentication extends Controller {
             user => {
                 try {
                 	Users.create(user)
-                	Redirect(routes.Application.index)
+                	Redirect(routes.Authentication.login).flashing("registration" -> "Your account have been created. You can now login and start using PlayJournal.")
                 } catch {
                     case e => {
                         val formWithErrors = signupForm.copy(errors=Seq(FormError("email", "Email already registered. Please recheck your email."))).fill(user)
