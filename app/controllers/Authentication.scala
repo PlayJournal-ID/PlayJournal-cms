@@ -76,4 +76,9 @@ object Authentication extends Controller {
             }
         )
     }
+    
+    def logout = Action { implicit request =>
+        Redirect(routes.Application.index).withNewSession
+        	.flashing("logoutSuccess" -> "Thank you for using PlayJournal!")
+    }
 }
