@@ -13,13 +13,13 @@ import views._
 
 object Authentication extends Controller {
     val signupForm = Form(
-       mapping(
-           "id" -> ignored(NotAssigned:Pk[Long]),
-           "email" -> email.verifying(nonEmpty),
-           "password" -> nonEmptyText,
-           "name" -> nonEmptyText
-       ) ((id, email, password, name) => Users(id, email, password, name))
-         ((user: Users) => Some(user.id, user.email, user.password, user.name))
+        mapping(
+            "id" -> ignored(NotAssigned:Pk[Long]),
+            "email" -> email.verifying(nonEmpty),
+            "password" -> nonEmptyText,
+            "name" -> nonEmptyText
+        ) ((id, email, password, name) => Users(id, email, password, name))
+          ((user: Users) => Some(user.id, user.email, user.password, user.name))
     )
     
     def signup = Action { implicit request =>
