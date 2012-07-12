@@ -1,5 +1,31 @@
-@(signupForm: String)(implicit request: play.api.mvc.RequestHeader)
+@(signupForm: Form[Users])(implicit request: play.api.mvc.RequestHeader)
+
+@import helper._
+
+@implicitField = @{ FieldConstructor(bootstrapInput.f) }
 
 @main("Sign Up", "signup") {
-	<h1>SIGNUP @signupForm</h1>
+	<div class="row">
+		@helper.form(routes.Authentication.signupProcess, 'class -> "form-horizontal span4 offset3"){
+		<fieldset>
+			<legend>Create an account</legend>
+			
+			@if(signupForm.hasGlobalErrors){
+				<div class="alert alert-error">
+					@signupForm.globalErrors.map { error =>
+						<strong>Error: </strong> @error.message <br>
+					}
+				</div>
+			}
+			
+			@inputText(signupForm("email"))
+			@inputText(signupForm("name"))
+			@inputPassword(signupForm("password"))
+			
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary btn-large">Create New Account</button>
+			<div>
+		</fieldset>
+		}
+	</div>
 }

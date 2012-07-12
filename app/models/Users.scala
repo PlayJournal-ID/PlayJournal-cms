@@ -6,16 +6,16 @@ import anorm.SqlParser._
 import org.apache.commons.codec.digest.DigestUtils._
 import play.api.Play.current
 
-case class Users(email: String, password: String, name: String, privilege: Long, id: Long = 0)
+case class Users(id: Pk[Long], email: String, password: String, name: String, privilege: Long = 2)
 
 object Users {
     val simple = {
-        get[String]("users.email") ~
+        get[Pk[Long]]("users.id") ~
+            get[String]("users.email") ~
             get[String]("users.password") ~
             get[String]("users.name") ~
-            get[Long]("users.privilege") ~
-            get[Long]("users.id") map {
-                case email ~ password ~ name ~ privilege ~ id => Users(email, password, name, privilege, id)
+            get[Long]("users.privilege") map {
+                case id ~ email ~ password ~ name ~ privilege => Users(id, email, password, name, privilege)
             }
     }
 
