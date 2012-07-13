@@ -15,7 +15,16 @@
         @stylesheets
         
         <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("bootstrap/js/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("bootstrap/js/bootstrap-dropdown.js")" type="text/javascript"></script>
         @javascripts
+        
+        <script type="text/javascript">
+        	$(document).ready(function(){
+        		// dropdown for some menu
+	        	$('.dropdown-toggle').dropdown()
+        	})
+        </script>
     </head>
     <body>
     	<div class="container">
@@ -29,7 +38,13 @@
     					
     					<ul class="nav pull-right">
     					@if(SessionHelper.isAuthenticated){
-    						<li><a href="#">@request.session.get("username")</a></li>
+    						<li><a href="#">@SessionHelper.getUserName</a></li>
+    						<li class="dropdown @{if(section contains "post") "active"}">
+    							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Post <b class="caret"></b></a>
+    							<ul class="dropdown-menu">
+    								<li><a href="@routes.Post.create">New Post</a></li>
+    							</ul>
+    						</li>
     						<li class="divider-vertical"></li>
     						<li><a href="@routes.Authentication.logout">Log out</a></li>
     					} else {

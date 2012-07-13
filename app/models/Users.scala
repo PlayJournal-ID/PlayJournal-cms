@@ -25,6 +25,14 @@ object Users {
         findByEmail(email).filter { user => user.password == passwordHash(password, email) }
     }
 
+    def findById(id: Long): Option[Users] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM users WHERE users.id = {id}")
+                .on('id -> id)
+                .as(simple.singleOpt)
+        }
+    }
+    
     def findByEmail(email: String): Option[Users] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM users WHERE users.email = {email}")
