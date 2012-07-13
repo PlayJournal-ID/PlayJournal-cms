@@ -28,6 +28,21 @@ object Post extends Controller with Security {
     }
     
     def createPost = OnlyAuthenticated { user => implicit requset =>
-        Ok(html.post.create(postForm))
+        postForm.bindFromRequest.fold (
+            formWithErrors => BadRequest(html.post.create(formWithErrors)),
+            post => {
+                try {
+                    val userId: Long = SessionHelper.getUserId
+                    models.Post.create(post.title, post.content, userId)
+                    Redirect(routes.Application.index)
+                } catch {
+                    case e => {
+                        // global error == error without a key
+                        val formWithErrors = postForm.copy(errors=Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
+                        BadRequest(html.post.create(formWithErrors))
+                    }
+                }
+            }
+        )
     }
 }
