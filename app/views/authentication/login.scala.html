@@ -11,9 +11,9 @@
     	</div>
     }
     
-    @if(flash.get("unauthorized").exists(_ => true)){
+    @if(flash.get("security").exists(_ => true)){
     	<div class="alert alert-warning">
-    		@flash.get("unauthorized")
+    		@flash.get("security")
     	</div>
     }
 
