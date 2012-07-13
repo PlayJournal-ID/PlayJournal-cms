@@ -1,0 +1,11 @@
+@(post: models.Post)(implicit request: play.api.mvc.RequestHeader)
+
+@main(post.title, "post.show"){
+<div class="post">
+	<h1>@post.title <small>by: @{Users.findById(post.writer).map(u => u.name)} | @post.created</small></h1>
+	
+	<div class="post.content">
+	@Html(models.Post.contentToHTML(post.content))
+	</div>
+</div>
+}

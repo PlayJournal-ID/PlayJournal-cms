@@ -6,6 +6,8 @@ import anorm.SqlParser._
 import java.util.Date
 import play.api.Play.current
 
+import org.clapper.markwrap._
+
 case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0)
 
 object Post {
@@ -14,10 +16,23 @@ object Post {
             get[String]("post.title") ~
             get[String]("post.content") ~
             get[Date]("post.created") ~
-            get[Date]("post.lastUpdate") ~
+            get[Date]("post.last_update") ~
             get[Long]("post.writer") map {
                 case id ~ title ~ content ~ created ~ lastUpdate ~ writer => Post(id, title, content, created, lastUpdate, writer)
             }
+    }
+    
+    def findById(id: Long) = {
+        DB.withConnection { implicit connection => 
+            SQL("SELECT * FROM post WHERE post.id = {id}")
+            	.on('id -> id)
+            	.as(simple.singleOpt)
+        }
+    }
+    
+    def contentToHTML(content: String) = {
+        val parser = MarkWrap.parserFor(MarkupType.Markdown)
+        parser.parseToHTML(content)
     }
     
     def create(title: String, content: String, userId: Long) = {

@@ -23,6 +23,13 @@ object Post extends Controller with Security {
           ((post: models.Post) => Some(post.id, post.title, post.content))
     )
     
+    def show(id: Long) = Action { implicit request =>
+        models.Post.findById(id) match {
+            case Some(post) => Ok(html.post.show(post))
+            case _ => Redirect(routes.Application.index)
+        }
+    }
+    
     def create = OnlyAuthenticated { user => implicit request =>
         Ok(html.post.create(postForm))
     }
@@ -33,8 +40,8 @@ object Post extends Controller with Security {
             post => {
                 try {
                     val userId: Long = SessionHelper.getUserId
-                    models.Post.create(post.title, post.content, userId)
-                    Redirect(routes.Application.index)
+                    val newPost = models.Post.create(post.title, post.content, userId)
+                    Redirect(routes.Post.show(newPost.getOrElse(0))) // getOrElse should never be called.
                 } catch {
                     case e => {
                         // global error == error without a key
