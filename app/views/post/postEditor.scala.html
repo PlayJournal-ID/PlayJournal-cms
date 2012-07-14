@@ -1,4 +1,4 @@
-@(postForm: Form[models.Post], title: String = "", section: String = "", legend: String)(implicit request: play.api.mvc.RequestHeader)
+@(id: Long, postForm: Form[models.Post], title: String = "", section: String = "", legend: String)(implicit request: play.api.mvc.RequestHeader)
 
 @stylesheets = {
 	<link rel="stylesheet" href="@routes.Assets.at("stylesheets/post.css")">
@@ -16,7 +16,7 @@
 @pagedown = @{FieldConstructor(pagedownBootstrapTextArea.f)}
 
 @main(title, section, javascripts, stylesheets){
-	@helper.form(routes.Post.createPost) {
+	@helper.form(routes.Post.processPostForm(id)) {
 	<fieldset>
 		<legend>@title</legend>
 		

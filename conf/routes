@@ -17,7 +17,7 @@ GET    /logout                      controllers.Authentication.logout
 GET    /post                        controllers.Post.list
 GET    /post/edit/:id               controllers.Post.edit(id: Long)
 GET    /post/new                    controllers.Post.create
-POST   /post/new                    controllers.Post.createPost
+POST   /post/process/:id            controllers.Post.processPostForm(id: Long)
 GET    /post/:id                    controllers.Post.show(id: Long) 
 
 # Map static resources from the /public folder to the /assets URL path
