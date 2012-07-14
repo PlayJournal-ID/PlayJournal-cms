@@ -1,7 +1,34 @@
 @(posts: Seq[models.Post])(implicit request: play.api.mvc.RequestHeader)
 
+@import java.text.SimpleDateFormat;
+
 @main("Your Posts", "post.list") {
-    @posts.map{ post =>
-        @post.title
-    }
+    <table class="table table-bordered table-stripped">
+		<thead>
+			<tr>
+				<th>Title</th>
+				<th>Post Date</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+		@if(posts.isEmpty){
+		    <tr><td colspan="2" style="text-align: center;">You have no post yet. <a href="@routes.Post.create">Create a new post!</a></td></tr>
+		}
+    	@posts.map{ post =>
+    	    <tr>
+    			<td>@post.title</td>
+    			<td>
+    				@defining(new SimpleDateFormat("dd MMMM yyyy HH:mm")) { formatter =>
+    				    @formatter.format(post.created)
+    				}
+    			</td>
+    			<td>
+    				<i class="icon-edit"></i>
+    				<a href="@routes.Post.show(post.id.get)" title="view post"><i class="icon-share-alt"></i></a>
+    			</td>
+    		</tr>
+	    }
+    	</tbody>
+    </table>
 }
