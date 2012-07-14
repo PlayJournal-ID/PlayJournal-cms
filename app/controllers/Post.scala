@@ -70,8 +70,15 @@ object Post extends Controller with Security {
         postForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.post.edit(formWithErrors, id)),
             post => {
-                println(id)
-                Redirect(routes.Post.list)
+                try {
+                    models.Post.update(id, post.title, post.content)
+                    Redirect(routes.Post.show(id))
+                } catch {
+                    case e => {
+                        val formWithErrors = postForm.copy(errors=Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
+                        BadRequest(html.post.create(formWithErrors))
+                    }
+                }
             }
         )
     }

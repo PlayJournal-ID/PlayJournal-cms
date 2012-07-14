@@ -57,4 +57,19 @@ object Post {
                    .executeInsert()
         }
     }
+    
+    def update(id: Long, title: String, content: String) = {
+        DB.withConnection { implicit connection => 
+            SQL("""
+                    UPDATE post SET title = {title}, content = {content}
+                    WHERE id = {id}
+                """)
+                .on(
+                    'title -> title, 
+                    'content -> content, 
+                    'id -> id
+                )
+                .executeUpdate()
+        }
+    }
 }
