@@ -1,0 +1,3 @@
+@(postForm: Form[models.Post], id: Long)(implicit request: play.api.mvc.RequestHeader)
+
+@postEditor(id, postForm, "Edit Post", "post.edit", "Edit your post")

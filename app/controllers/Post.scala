@@ -23,10 +23,15 @@ object Post extends Controller with Security {
           ((post: models.Post) => Some(post.id, post.title, post.content))
     )
     
+    def list = OnlyAuthenticated { user => implicit request =>
+        val posts = models.Post.findByWriter(SessionHelper.getUserId)
+        Ok(html.post.list(posts))
+    }
+    
     def show(id: Long) = Action { implicit request =>
         models.Post.findById(id) match {
             case Some(post) => Ok(html.post.show(post))
-            case _ => Redirect(routes.Application.index)
+            case _ => NotFound
         }
     }
     
@@ -34,22 +39,55 @@ object Post extends Controller with Security {
         Ok(html.post.create(postForm))
     }
     
-    def createPost = OnlyAuthenticated { user => implicit requset =>
-        postForm.bindFromRequest.fold (
+    def edit(id: Long) = OnlyAuthenticated{ user => implicit request => 
+        models.Post.findById(id) match {
+            case Some(post) => Ok(html.post.edit(postForm.fill(post), id))
+            case _ => NotFound
+        }
+    }
+    
+    def createPost(implicit request: RequestHeader, httpRequest: play.api.mvc.Request[_]) = {
+        postForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.post.create(formWithErrors)),
             post => {
                 try {
                     val userId: Long = SessionHelper.getUserId
                     val newPost = models.Post.create(post.title, post.content, userId)
-                    Redirect(routes.Post.show(newPost.getOrElse(0))) // getOrElse should never be called.
+                    Redirect(routes.Post.show(newPost.getOrElse(0)))
                 } catch {
                     case e => {
                         // global error == error without a key
+                        val formWithErrors = postForm.copy(errors=Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
+                        BadRequest(html.post.create(formWithErrors))
+                    
+                    }
+                }
+            }
+        )
+    }
+    
+    def editPost(id: Long)(implicit request: RequestHeader, httpRequest: play.api.mvc.Request[_]) = {
+        postForm.bindFromRequest.fold(
+            formWithErrors => BadRequest(html.post.edit(formWithErrors, id)),
+            post => {
+                try {
+                    models.Post.update(id, post.title, post.content)
+                    Redirect(routes.Post.show(id))
+                } catch {
+                    case e => {
                         val formWithErrors = postForm.copy(errors=Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
                         BadRequest(html.post.create(formWithErrors))
                     }
                 }
             }
         )
+    }
+    
+    def processPostForm(id: Long) = OnlyAuthenticated { user => implicit request =>
+        val referer = request.headers.get("referer").getOrElse("")
+        
+        if(referer.contains("post/new")) createPost
+        else if(referer.contains("post/edit")) editPost(id)
+        else Forbidden
     }
 }
