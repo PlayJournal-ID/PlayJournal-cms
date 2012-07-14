@@ -14,10 +14,10 @@ trait Security {
     def OnlyUnauthenticated(f: Request[AnyContent] => Result): Action[AnyContent] = Action { implicit request =>
         SessionHelper.isAuthenticated match {
             case true => onAuthorized(request)
-            case _ => f(request)
+            case _    => f(request)
         }
     }
-    
+
     def OnlyAuthenticated(f: => String => Request[AnyContent] => Result) = {
         Security.Authenticated(username, onUnauthorized) { user =>
             Action(implicit request => f(user)(request))

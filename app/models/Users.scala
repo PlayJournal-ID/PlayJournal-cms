@@ -32,7 +32,7 @@ object Users {
                 .as(simple.singleOpt)
         }
     }
-    
+
     def findByEmail(email: String): Option[Users] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM users WHERE users.email = {email}")
@@ -40,9 +40,9 @@ object Users {
                 .as(simple.singleOpt)
         }
     }
-    
+
     def findAll(): Seq[Users] = {
-        DB.withConnection{ implicit connection =>
+        DB.withConnection { implicit connection =>
             SQL("SELECT * FROM users").as(simple *)
         }
     }
