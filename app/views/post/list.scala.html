@@ -1,0 +1,7 @@
+@(posts: Seq[models.Post])(implicit request: play.api.mvc.RequestHeader)
+
+@main("Your Posts", "post.list") {
+    @posts.map{ post =>
+        @post.title
+    }
+}

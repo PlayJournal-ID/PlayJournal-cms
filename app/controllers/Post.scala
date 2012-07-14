@@ -23,6 +23,11 @@ object Post extends Controller with Security {
           ((post: models.Post) => Some(post.id, post.title, post.content))
     )
     
+    def list = OnlyAuthenticated { user => implicit request =>
+        val posts = models.Post.findByWriter(SessionHelper.getUserId)
+        Ok(html.post.list(posts))
+    }
+    
     def show(id: Long) = Action { implicit request =>
         models.Post.findById(id) match {
             case Some(post) => Ok(html.post.show(post))

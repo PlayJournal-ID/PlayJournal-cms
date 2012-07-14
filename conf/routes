@@ -14,6 +14,7 @@ POST   /login                       controllers.Authentication.authenticate
 GET    /logout                      controllers.Authentication.logout
 
 # Post CRUD
+GET    /post                        controllers.Post.list
 GET    /post/new                    controllers.Post.create
 POST   /post/new                    controllers.Post.createPost
 GET    /post/:id                    controllers.Post.show(id: Long) 
