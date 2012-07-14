@@ -26,7 +26,7 @@ object Post extends Controller with Security {
     def show(id: Long) = Action { implicit request =>
         models.Post.findById(id) match {
             case Some(post) => Ok(html.post.show(post))
-            case _ => Redirect(routes.Application.index)
+            case _ => NotFound
         }
     }
     
