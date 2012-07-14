@@ -57,4 +57,11 @@ object Post extends Controller with Security {
             }
         )
     }
+    
+    def edit(id: Long) = OnlyAuthenticated{ user => implicit request => 
+        models.Post.findById(id) match {
+            case Some(post) => Ok(html.post.edit(postForm.fill(post)))
+            case _ => NotFound
+        }
+    }
 }
