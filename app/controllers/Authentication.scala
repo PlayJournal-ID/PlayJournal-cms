@@ -16,50 +16,50 @@ import views._
 object Authentication extends Controller with Security {
     val signupForm = Form(
         mapping(
-            "id" -> ignored(NotAssigned:Pk[Long]),
+            "id" -> ignored(NotAssigned: Pk[Long]),
             "email" -> email.verifying(nonEmpty),
             "password" -> nonEmptyText,
             "name" -> nonEmptyText
-        ) ((id, email, password, name) => Users(id, email, password, name))
-          ((user: Users) => Some(user.id, user.email, user.password, user.name))
+        )((id, email, password, name) => Users(id, email, password, name))((user: Users) => Some(user.id, user.email, user.password, user.name))
     )
-    
+
     val loginForm = Form(
         tuple(
             "email" -> email.verifying(nonEmpty),
             "password" -> nonEmptyText
         ) verifying ("Email and password do not match.", result => result match {
-            case (email, password) => Users.authenticate(email, password).isDefined
-        })
+                case (email, password) => Users.authenticate(email, password).isDefined
+            })
     )
-    
+
     def signup = OnlyUnauthenticated { implicit request =>
         Ok(html.authentication.signup(signupForm))
     }
-    
+
     def signupProcess = OnlyUnauthenticated { implicit request =>
-        signupForm.bindFromRequest.fold (
+        signupForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.authentication.signup(formWithErrors)),
             user => {
                 // there will be an exception if email's already in database, hence the try-catch block.
                 // Anorm might be leaking abstraction here. Note this for future update.
                 try {
-                	Users.create(user)
-                	Redirect(routes.Authentication.login).flashing("registration" -> "Your account have been created. You can now login and start using PlayJournal.")
-                } catch {
+                    Users.create(user)
+                    Redirect(routes.Authentication.login).flashing("registration" -> "Your account have been created. You can now login and start using PlayJournal.")
+                }
+                catch {
                     case e => {
-                        val formWithErrors = signupForm.copy(errors=Seq(FormError("email", "Email already registered. Please recheck your email."))).fill(user)
+                        val formWithErrors = signupForm.copy(errors = Seq(FormError("email", "Email already registered. Please recheck your email."))).fill(user)
                         BadRequest(html.authentication.signup(formWithErrors))
                     }
                 }
             }
         )
     }
-    
-    def login = OnlyUnauthenticated { implicit request => 
+
+    def login = OnlyUnauthenticated { implicit request =>
         Ok(html.authentication.login(loginForm))
     }
-    
+
     def authenticate = OnlyUnauthenticated { implicit request =>
         loginForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.authentication.login(formWithErrors)),
@@ -67,16 +67,16 @@ object Authentication extends Controller with Security {
                 val user: Users = Users.findByEmail(loginInfo._1) match {
                     case Some(u) => u
                     // there should be no wrong email by now. It has been authenticated by Users.authenticate before!
-                    case None => throw new Exception("FATAL ERROR: Authentication.Authenticate get the wrong email.")
+                    case None    => throw new Exception("FATAL ERROR: Authentication.Authenticate get the wrong email.")
                 }
-                
-            	Redirect(routes.Application.index).withSession(SessionHelper.createSession(user.id.get, user.email, user.privilege): _*)
+
+                Redirect(routes.Application.index).withSession(SessionHelper.createSession(user.id.get, user.email, user.privilege): _*)
             }
         )
     }
-    
+
     def logout = Action { implicit request =>
         Redirect(routes.Application.index).withNewSession
-        	.flashing("logoutSuccess" -> "Thank you for using PlayJournal!")
+            .flashing("logoutSuccess" -> "Thank you for using PlayJournal!")
     }
 }

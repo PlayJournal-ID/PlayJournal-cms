@@ -16,36 +16,38 @@ import views._
 object Post extends Controller with Security {
     val postForm = Form(
         mapping(
-            "id" -> ignored(NotAssigned:Pk[Long]),
+            "id" -> ignored(NotAssigned: Pk[Long]),
             "title" -> nonEmptyText,
             "content" -> nonEmptyText
-        ) ((id, title, content) => models.Post(id, title, content))
-          ((post: models.Post) => Some(post.id, post.title, post.content))
+        )((id, title, content) => models.Post(id, title, content))((post: models.Post) => Some(post.id, post.title, post.content))
     )
-    
-    def list = OnlyAuthenticated { user => implicit request =>
-        val posts = models.Post.findByWriter(SessionHelper.getUserId)
-        Ok(html.post.list(posts))
+
+    def list = OnlyAuthenticated { user =>
+        implicit request =>
+            val posts = models.Post.findByWriter(SessionHelper.getUserId)
+            Ok(html.post.list(posts))
     }
-    
+
     def show(id: Long) = Action { implicit request =>
         models.Post.findById(id) match {
             case Some(post) => Ok(html.post.show(post))
-            case _ => NotFound
+            case _          => NotFound
         }
     }
-    
-    def create = OnlyAuthenticated { user => implicit request =>
-        Ok(html.post.create(postForm))
+
+    def create = OnlyAuthenticated { user =>
+        implicit request =>
+            Ok(html.post.create(postForm))
     }
-    
-    def edit(id: Long) = OnlyAuthenticated{ user => implicit request => 
-        models.Post.findById(id) match {
-            case Some(post) => Ok(html.post.edit(postForm.fill(post), id))
-            case _ => NotFound
-        }
+
+    def edit(id: Long) = OnlyAuthenticated { user =>
+        implicit request =>
+            models.Post.findById(id) match {
+                case Some(post) => Ok(html.post.edit(postForm.fill(post), id))
+                case _          => NotFound
+            }
     }
-    
+
     def createPost(implicit request: RequestHeader, httpRequest: play.api.mvc.Request[_]) = {
         postForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.post.create(formWithErrors)),
@@ -54,18 +56,19 @@ object Post extends Controller with Security {
                     val userId: Long = SessionHelper.getUserId
                     val newPost = models.Post.create(post.title, post.content, userId)
                     Redirect(routes.Post.show(newPost.getOrElse(0)))
-                } catch {
+                }
+                catch {
                     case e => {
                         // global error == error without a key
-                        val formWithErrors = postForm.copy(errors=Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
+                        val formWithErrors = postForm.copy(errors = Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
                         BadRequest(html.post.create(formWithErrors))
-                    
+
                     }
                 }
             }
         )
     }
-    
+
     def editPost(id: Long)(implicit request: RequestHeader, httpRequest: play.api.mvc.Request[_]) = {
         postForm.bindFromRequest.fold(
             formWithErrors => BadRequest(html.post.edit(formWithErrors, id)),
@@ -73,21 +76,23 @@ object Post extends Controller with Security {
                 try {
                     models.Post.update(id, post.title, post.content)
                     Redirect(routes.Post.show(id))
-                } catch {
+                }
+                catch {
                     case e => {
-                        val formWithErrors = postForm.copy(errors=Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
+                        val formWithErrors = postForm.copy(errors = Seq(FormError("", "Ooops. We get an error creating your post. Please relogin and try again."))).fill(post)
                         BadRequest(html.post.create(formWithErrors))
                     }
                 }
             }
         )
     }
-    
-    def processPostForm(id: Long) = OnlyAuthenticated { user => implicit request =>
-        val referer = request.headers.get("referer").getOrElse("")
-        
-        if(referer.contains("post/new")) createPost
-        else if(referer.contains("post/edit")) editPost(id)
-        else Forbidden
+
+    def processPostForm(id: Long) = OnlyAuthenticated { user =>
+        implicit request =>
+            val referer = request.headers.get("referer").getOrElse("")
+
+            if (referer.contains("post/new")) createPost
+            else if (referer.contains("post/edit")) editPost(id)
+            else Forbidden
     }
 }
