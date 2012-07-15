@@ -1,8 +1,19 @@
-.wmd-panel
+.post-main
+{
+	float: left;
+}
+
+.post-preview
+{
+	float: right;
+	padding: 15px;
+	border: 1px dashed black;
+}
+
+.post-main, .post-preview
 {
 	width: 45%;
-	min-width: 450px;
-	float: left;
+	min-width: 400px;
 }
 
 .wmd-button-bar 
@@ -21,8 +32,6 @@
 
 .wmd-preview 
 { 
-	background-color: #DDD;
-	float: right;
 }
 
 .wmd-button-row 
