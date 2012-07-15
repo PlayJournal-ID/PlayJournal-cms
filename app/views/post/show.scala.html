@@ -1,13 +1,18 @@
 @(post: models.Post)(implicit request: play.api.mvc.RequestHeader)
 
 @import controllers.helpers.SessionHelper
+@import java.text.SimpleDateFormat
 
 @main(post.title, "post.show"){
 <div class="post">
 	@if(SessionHelper.getUserId == post.writer){
 	    <a href="@routes.Post.edit(post.id.getOrElse(0))"><button class="btn btn-warning">Edit Post</button></a>
 	}
-	<h1>@post.title <small>by: @{Users.findById(post.writer).map(u => u.name)} | @post.created</small></h1>
+	<h1>@post.title <small>by: @{Users.findById(post.writer).map(u => u.name)} | 
+    	@defining(new SimpleDateFormat("dd MMMM yyyy HH:mm")) { formatter =>
+    	    @formatter.format(post.created)
+    	}
+	</small></h1>
 	
 	<div class="post.content">
 	@Html(models.Post.contentToHTML(post.content))

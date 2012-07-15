@@ -1,0 +1,15 @@
+@(post: models.Post)
+
+@import java.text.SimpleDateFormat
+
+<div class="well post">
+	<h1>@post.title <small>by: @Users.findById(post.writer).map(u => u.name) | 
+    	@defining(new SimpleDateFormat("dd MMMM yyyy HH:mm")) { formatter =>
+    	    @formatter.format(post.created)
+    	}
+	</small></h1>
+	<div class="post.content mini">
+		@Html(models.Post.contentToHTML(post.content.substring(0, post.content.indexOf("\n"))))
+	</div>
+	<a href="@routes.Post.show(post.id.get)" title="read @post.title">read more...</a>
+</div>

@@ -9,7 +9,7 @@ object Application extends Controller {
 
     def index(page: Long) = Action { implicit request =>
         val posts = models.Post.findFrontPage(page)
-        Ok(views.html.index("PlayJournal CMS"))
+        Ok(views.html.index(posts))
     }
 
 }
