@@ -1,4 +1,4 @@
-@(message: String)(implicit request: play.api.mvc.RequestHeader, flash: Flash)
+@(posts: Seq[Post])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
 @main("Welcome to PlayJournal") {
 	@if(flash.get("logoutSuccess").exists(_ => true)){
@@ -13,7 +13,9 @@
 	   	</div>
    	}
     
-    <div class="hero-unit">
-    	<h1>@message</h1>
-    </div>
+   	<div class="span8">
+   		@posts.map { post =>
+   	    	@views.html.post.miniPost(post)
+   		}
+   	</div>
 }

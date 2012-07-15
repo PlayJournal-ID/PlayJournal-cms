@@ -22,7 +22,18 @@ object Post {
             }
     }
 
-    def findById(id: Long) = {
+    def findFrontPage(page: Long, postPerPage: Long = 10): Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM post ORDER BY post.last_update DESC LIMIT {min}, {max}")
+                .on(
+                    'min -> (page - 1) * postPerPage,
+                    'max -> page * postPerPage
+                )
+                .as(simple *)
+        }
+    }
+
+    def findById(id: Long): Option[Post] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM post WHERE post.id = {id}")
                 .on('id -> id)
@@ -38,7 +49,7 @@ object Post {
         }
     }
 
-    def contentToHTML(content: String) = {
+    def contentToHTML(content: String): String = {
         val parser = MarkWrap.parserFor(MarkupType.Markdown)
         parser.parseToHTML(content)
     }

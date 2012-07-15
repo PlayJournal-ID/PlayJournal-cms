@@ -70,13 +70,13 @@ object Authentication extends Controller with Security {
                     case None    => throw new Exception("FATAL ERROR: Authentication.Authenticate get the wrong email.")
                 }
 
-                Redirect(routes.Application.index).withSession(SessionHelper.createSession(user.id.get, user.email, user.privilege): _*)
+                Redirect(routes.Application.index()).withSession(SessionHelper.createSession(user.id.get, user.email, user.privilege): _*)
             }
         )
     }
 
     def logout = Action { implicit request =>
-        Redirect(routes.Application.index).withNewSession
+        Redirect(routes.Application.index()).withNewSession
             .flashing("logoutSuccess" -> "Thank you for using PlayJournal!")
     }
 }

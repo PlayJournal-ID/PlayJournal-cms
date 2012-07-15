@@ -9,7 +9,7 @@ import controllers.helpers._
 trait Security {
     def username(request: RequestHeader) = SessionHelper.getUserName(request)
     def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Authentication.login).flashing("security" -> "You need to authenticate yourself to use this feature.")
-    def onAuthorized(request: RequestHeader) = Results.Redirect(routes.Application.index).flashing("security" -> "Authenticated user cannot access previous page.")
+    def onAuthorized(request: RequestHeader) = Results.Redirect(routes.Application.index()).flashing("security" -> "Authenticated user cannot access previous page.")
 
     def OnlyUnauthenticated(f: Request[AnyContent] => Result): Action[AnyContent] = Action { implicit request =>
         SessionHelper.isAuthenticated match {
