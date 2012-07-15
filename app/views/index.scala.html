@@ -13,7 +13,9 @@
 	   	</div>
    	}
     
-   	@posts.map { post =>
-   	    @views.html.post.miniPost(post)
-   	}
+   	<div class="span8">
+   		@posts.map { post =>
+   	    	@views.html.post.miniPost(post)
+   		}
+   	</div>
 }

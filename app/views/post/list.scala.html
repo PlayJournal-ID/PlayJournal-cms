@@ -3,6 +3,7 @@
 @import java.text.SimpleDateFormat
 
 @main("Your Posts", "post.list") {
+<h1>Your Posts <small>create, edit, and delete</small></h1>
     <table class="table table-bordered table-stripped">
 		<thead>
 			<tr>
@@ -11,6 +12,11 @@
 				<th>Action</th>
 			</tr>
 		</thead>
+		<tfoot>
+			<tr>
+				<td colspan="3" style="text-align: right;"><a href="@routes.Post.create"><button class="btn btn-success">New Post</button></a></td>
+			</tr>
+		</tfoot>
 		<tbody>
 		@if(posts.isEmpty){
 		    <tr><td colspan="2" style="text-align: center;">You have no post yet. <a href="@routes.Post.create">Create a new post!</a></td></tr>
