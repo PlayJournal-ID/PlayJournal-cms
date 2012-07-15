@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.Application.index(page: Long ?= 1)
 
 # Authentication and Registration
 GET    /signup                      controllers.Authentication.signup

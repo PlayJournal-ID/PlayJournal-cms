@@ -31,9 +31,9 @@
     		<div class="navbar">
     			<div class="navbar-inner">
     				<div class="container">
-    					<a class="brand" href="@routes.Application.index">PlayJournal</a>
+    					<a class="brand" href="@routes.Application.index()">PlayJournal</a>
     					<ul class="nav">
-    						<li @{if(section.equals("home")) "class=active"}><a href="@routes.Application.index">Home</a></li>
+    						<li @{if(section.equals("home")) "class=active"}><a href="@routes.Application.index()">Home</a></li>
     					</ul>
     					
     					<ul class="nav pull-right">

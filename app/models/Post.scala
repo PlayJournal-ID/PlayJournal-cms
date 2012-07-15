@@ -22,6 +22,17 @@ object Post {
             }
     }
 
+    def findFrontPage(page: Long, postPerPage: Long = 10) = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM post ORDER BY post.last_update DESC LIMIT {min} {max}")
+                .on(
+                    'min -> (page - 1) * postPerPage,
+                    'max -> page * postPerPage
+                )
+                .as(simple *)
+        }
+    }
+
     def findById(id: Long) = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM post WHERE post.id = {id}")
