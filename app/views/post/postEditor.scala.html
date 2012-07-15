@@ -31,8 +31,6 @@
 		@inputText(postForm("title"))
 		@textarea(postForm("content"))(handler = pagedown, implicitly[Lang])
 		
-		<div style="clear: both"></div>
-		
 		<div class="form-actions centered">
 			<button type="submit" class="btn btn-primary btn-large">Submit Post</button>
 		</div>
@@ -45,5 +43,15 @@
 			var editor = new Markdown.Editor(converter);
 			editor.run();
 		})();
+		
+		$(document).ready(function(){
+		    var titlePreview = function(){
+			    $("#title-preview").text(function(i, t){
+			        return $("#title").val()
+		        })
+		    };
+	        $("#title").keyup(titlePreview);
+		    titlePreview();
+	    })
 	</script>
 }

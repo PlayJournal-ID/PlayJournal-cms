@@ -3,6 +3,7 @@
 <div class="control-group @if(elements.hasErrors) { error }">
 	<div class="controls">
 		<label for="@elements.id">@elements.label</label>
+		<div class="post-main">
 		<div class="wmd-panel">
 			@if(elements.hasErrors){
 				<span class="help-inline">@elements.errors</span>
@@ -10,6 +11,13 @@
 			<div id="wmd-button-bar"></div>
 			<textarea id="wmd-input" name="@elements.field.name" class="wmd-input">@elements.field.value</textarea>
 		</div>
+		</div>
+		
+		<div class="post-preview">
+		<h1 id="title-preview"></h1>
 		<div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+		</div>
+
+		<div style="clear: both"></div>
 	</div>
 </div>
