@@ -4,7 +4,7 @@
 @import java.text.SimpleDateFormat
 
 @main(post.title, "post.show"){
-<div class="post span10">
+<div class="post span8">
 	@if(SessionHelper.getUserId == post.writer){
 	    <a href="@routes.Post.edit(post.id.getOrElse(0))"><button class="btn btn-warning">Edit Post</button></a>
 	}

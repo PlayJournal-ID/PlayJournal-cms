@@ -21,3 +21,25 @@
 		<div style="clear: both"></div>
 	</div>
 </div>
+
+<script type="text/javascript">
+	(function(){
+		var converter = Markdown.getSanitizingConverter();
+		var editor = new Markdown.Editor(converter);
+		editor.run();
+	})();
+	
+	$(document).ready(function(){
+	    // Sync preview for header text with title textbox
+	    var titlePreview = function(){
+		    $("#title-preview").text(function(i, t){
+		        return $("#title").val()
+	        })
+	    };
+        $("#title").keyup(titlePreview);
+	    titlePreview();
+	    
+	    // autoresize the main textarea
+	    $("#wmd-input").autogrow();
+    })
+</script>
