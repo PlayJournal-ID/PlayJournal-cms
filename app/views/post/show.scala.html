@@ -3,21 +3,43 @@
 @import controllers.helpers.SessionHelper
 @import java.text.SimpleDateFormat
 
-@main(post.title, "post.show"){
-<div class="post span8">
-	@if(SessionHelper.getUserId == post.writer){
-	    <a href="@routes.Post.edit(post.id.getOrElse(0))"><button class="btn btn-warning">Edit Post</button></a>
-	}
-	<h1>@post.title <br>
-		<small>by: @{Users.findById(post.writer).map(u => u.name)} | 
+@javascripts = {
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.tableofcontents.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/waypoints.min.js")"></script>
+}
+
+@stylesheets = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/post.css")">
+}
+
+@main(post.title, "post.show", javascripts, stylesheets){
+<div class="post row">
+	<div class="post-content span8">
+		@if(SessionHelper.getUserId == post.writer){
+		    <a href="@routes.Post.edit(post.id.getOrElse(0))"><button class="btn btn-warning">Edit Post</button></a>
+		}
+		
+		<h1>@post.title</h1>
+		<small class="author">by: @{Users.findById(post.writer).map(u => u.name)} | 
     		@defining(new SimpleDateFormat("dd MMMM yyyy HH:mm")) { formatter =>
     			@formatter.format(post.created)
     		}
     	</small>
-    </h1>
-	
-	<div class="post-content">
-	@Html(models.Post.contentToHTML(post.content))
+
+    	@Html(models.Post.contentToHTML(post.content))
 	</div>
+    <ul class="span2" id="toc"></ul>
 </div>
+
+<script type="text/javascript">
+    $("#toc").tableOfContents();
+    $("h1, h2, h3, h4, h5, h6").waypoint(function(){
+        $("#toc").find($("a")).css("color", "#08C"); // color based on twitter bootstrap's link color
+        
+        var id = $(this).attr("id")
+        $("#toc").find($("a")).filter(function(index){
+            return $(this).attr("href") == "#" + id;
+        }).css("color", "red");
+    });
+</script>
 }
