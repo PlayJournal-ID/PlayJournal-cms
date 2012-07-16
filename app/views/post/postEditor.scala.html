@@ -5,6 +5,8 @@
 }
 
 @javascripts = {
+	<script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.autogrow.js")"></script>
+    
 	<script type="text/javascript" src="@routes.Assets.at("pagedown/Markdown.Converter.js")"></script>
 	<script type="text/javascript" src="@routes.Assets.at("pagedown/Markdown.Sanitizer.js")"></script>
 	<script type="text/javascript" src="@routes.Assets.at("pagedown/Markdown.Editor.js")"></script>
@@ -36,22 +38,4 @@
 		</div>
 	</fieldset>
 	}
-	
-	<script type="text/javascript">
-		(function(){
-			var converter = Markdown.getSanitizingConverter();
-			var editor = new Markdown.Editor(converter);
-			editor.run();
-		})();
-		
-		$(document).ready(function(){
-		    var titlePreview = function(){
-			    $("#title-preview").text(function(i, t){
-			        return $("#title").val()
-		        })
-		    };
-	        $("#title").keyup(titlePreview);
-		    titlePreview();
-	    })
-	</script>
 }

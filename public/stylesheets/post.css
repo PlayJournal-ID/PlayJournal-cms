@@ -1,0 +1,17 @@
+.author
+{
+	color: #999;
+	margin-bottom: 1em;
+	display: block;
+}
+
+#toc
+{
+	position: fixed;
+	right: 15%;
+}
+
+#toc, #toc ul
+{
+	list-style: none;
+}
