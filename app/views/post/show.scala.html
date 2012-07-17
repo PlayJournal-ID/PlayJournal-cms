@@ -1,7 +1,7 @@
 @(post: models.Post)(implicit request: play.api.mvc.RequestHeader)
 
 @import controllers.helpers.SessionHelper
-@import java.text.SimpleDateFormat
+@import views.helper.Format
 
 @javascripts = {
     <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.tableofcontents.min.js")"></script>
@@ -21,12 +21,10 @@
 		
 		<h1>@post.title</h1>
 		<small class="author">by: @{Users.findById(post.writer).map(u => u.name)} | 
-    		@defining(new SimpleDateFormat("dd MMMM yyyy HH:mm")) { formatter =>
-    			@formatter.format(post.created)
-    		}
+			@Format.date(post.created)
     	</small>
 
-    	@Html(models.Post.contentToHTML(post.content))
+    	@Html(Format.markdown(post.content))
 	</div>
     <ul class="span2" id="toc"></ul>
 </div>

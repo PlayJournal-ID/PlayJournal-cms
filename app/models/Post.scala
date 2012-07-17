@@ -6,8 +6,6 @@ import anorm.SqlParser._
 import java.util.Date
 import play.api.Play.current
 
-import org.clapper.markwrap._
-
 case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0)
 
 object Post {
@@ -47,11 +45,6 @@ object Post {
                 .on('writer -> writer)
                 .as(simple *)
         }
-    }
-
-    def contentToHTML(content: String): String = {
-        val parser = MarkWrap.parserFor(MarkupType.Markdown)
-        parser.parseToHTML(content)
     }
 
     def create(title: String, content: String, userId: Long) = {
