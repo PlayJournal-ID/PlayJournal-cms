@@ -1,6 +1,6 @@
 @(posts: Seq[models.Post])(implicit request: play.api.mvc.RequestHeader)
 
-@import java.text.SimpleDateFormat
+@import views.helper.Format
 
 @main("Your Posts", "post.list") {
 <h1>Your Posts <small>create, edit, and delete</small></h1>
@@ -25,9 +25,7 @@
     	    <tr>
     			<td>@post.title</td>
     			<td>
-    				@defining(new SimpleDateFormat("dd MMMM yyyy HH:mm")) { formatter =>
-    				    @formatter.format(post.created)
-    				}
+    				@Format.date(post.created)
     			</td>
     			<td>
     				<a href="@routes.Post.edit(post.id.get)" title="edit post"><i class="icon-edit"></i></a>

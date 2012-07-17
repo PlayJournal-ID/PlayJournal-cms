@@ -30,8 +30,8 @@ object Post extends Controller with Security {
 
     def show(id: Long) = Action { implicit request =>
         models.Post.findById(id) match {
-            case Some(post) => Ok(html.post.show(post))
-            case _          => NotFound
+            case Some(post: models.Post) => Ok(html.post.show(post))
+            case _                       => NotFound
         }
     }
 
@@ -43,8 +43,8 @@ object Post extends Controller with Security {
     def edit(id: Long) = OnlyAuthenticated { user =>
         implicit request =>
             models.Post.findById(id) match {
-                case Some(post) => Ok(html.post.edit(postForm.fill(post), id))
-                case _          => NotFound
+                case Some(post: models.Post) => Ok(html.post.edit(postForm.fill(post), id))
+                case _                       => NotFound
             }
     }
 
