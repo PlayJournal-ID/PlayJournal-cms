@@ -1,0 +1,18 @@
+@(nextLink: String, nextText: String, prevLink: String, prevText: String)
+<div id="pagination" class="pagination">
+	<ul>
+		@if(prevLink.isEmpty) {
+		    <li class="prev disabled"><a>&larr; @prevText</a></li>
+		} else {
+		    <li class="prev"><a href="@prevLink">&larr; @prevText</a></li>
+		}
+		
+		<li class="current"><a>Navigate to</a></li>
+
+		@if(nextLink.isEmpty) {
+		    <li class="next disabled"><a>&rarr; @nextText</a></li>
+		} else {
+		    <li class="next"><a href="@nextLink">&rarr; @nextText</a></li>
+		}
+	</ul>
+</div>

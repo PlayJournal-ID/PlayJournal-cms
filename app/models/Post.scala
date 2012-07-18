@@ -6,6 +6,8 @@ import anorm.SqlParser._
 import java.util.Date
 import play.api.Play.current
 
+import models.extra.Page
+
 case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0)
 
 object Post {
@@ -20,12 +22,22 @@ object Post {
             }
     }
 
+    def getPageItem(page: Long, pageSize: Long = 10) = {
+        Page(findFrontPage(page, pageSize), page, pageSize, getTotalRows())
+    }
+
+    def getTotalRows(): Long = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT count(post.id) FROM post").as(scalar[Long].single)
+        }
+    }
+
     def findFrontPage(page: Long, postPerPage: Long = 10): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post ORDER BY post.last_update DESC LIMIT {min}, {max}")
+            SQL("SELECT * FROM post ORDER BY post.last_update DESC LIMIT {limit} OFFSET {offset}")
                 .on(
-                    'min -> (page - 1) * postPerPage,
-                    'max -> page * postPerPage
+                    'limit -> postPerPage,
+                    'offset -> (page - 1) * postPerPage
                 )
                 .as(simple *)
         }

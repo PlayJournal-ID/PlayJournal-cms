@@ -1,4 +1,4 @@
-@(posts: Seq[Post])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
+@(posts: models.extra.Page[Post])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
 @main("Welcome to PlayJournal") {
 	@if(flash.get("logoutSuccess").exists(_ => true)){
@@ -14,8 +14,19 @@
    	}
     
    	<div class="span8">
-   		@posts.map { post =>
+   		@if(posts.items.isEmpty) {
+   		    <div class="well post">
+   				No Post to show.
+   			</div>
+   		}
+   		
+   		@posts.items.map { post =>
    	    	@views.html.post.miniPost(post)
    		}
+ 
+   		@views.html.helper.paginator(posts.prev.map { page => routes.Application.index(page).absoluteURL(false) }.getOrElse(""),
+   					"Newer Posts",
+   					posts.next.map { page => routes.Application.index(page).absoluteURL(false) }.getOrElse(""),
+   					"Older Post")
    	</div>
 }
