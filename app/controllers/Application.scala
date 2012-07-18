@@ -4,11 +4,12 @@ import play.api._
 import play.api.mvc._
 
 import models._
+import models.extra.Page
 
 object Application extends Controller {
 
     def index(page: Long) = Action { implicit request =>
-        val posts = models.Post.findFrontPage(page)
+        val posts = models.Post.getPageItem(page, 5)
         Ok(views.html.index(posts))
     }
 

@@ -6,7 +6,11 @@ import anorm.SqlParser._
 import java.util.Date
 import play.api.Play.current
 
-case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0)
+import models.extra.Page
+
+case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0) {
+    val titleSlug: String = title.toLowerCase.replace(" ", "-")
+}
 
 object Post {
     val simple = {
@@ -20,12 +24,34 @@ object Post {
             }
     }
 
+    def getPageItem(page: Long, pageSize: Long = 10) = {
+        Page(findFrontPage(page, pageSize), page, pageSize, getTotalRows())
+    }
+
+    def getPostByWriterPaginated(writer: Long, page: Long, pageSize: Long = 10) = {
+        Page(findByWriterPaginated(writer, page, pageSize), page, pageSize, getTotalRowsByWriter(writer))
+    }
+
+    def getTotalRows(): Long = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT count(post.id) FROM post").as(scalar[Long].single)
+        }
+    }
+
+    def getTotalRowsByWriter(writer: Long): Long = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT count(post.id) FROM post WHERE post.writer = {writer}")
+                .on('writer -> writer)
+                .as(scalar[Long].single)
+        }
+    }
+
     def findFrontPage(page: Long, postPerPage: Long = 10): Seq[Post] = {
         DB.withConnection { implicit connection =>
-            SQL("SELECT * FROM post ORDER BY post.last_update DESC LIMIT {min}, {max}")
+            SQL("SELECT * FROM post ORDER BY post.last_update DESC LIMIT {limit} OFFSET {offset}")
                 .on(
-                    'min -> (page - 1) * postPerPage,
-                    'max -> page * postPerPage
+                    'limit -> postPerPage,
+                    'offset -> (page - 1) * postPerPage
                 )
                 .as(simple *)
         }
@@ -39,11 +65,32 @@ object Post {
         }
     }
 
+    def findByWriterPaginated(writer: Long, page: Long, postPerPage: Long = 10) = {
+        DB.withConnection { implicit connection =>
+            SQL("""SELECT * FROM post WHERE post.writer = {writer}
+                       ORDER BY post.last_update DESC
+                       LIMIT {limit} OFFSET {offset}
+                """)
+                .on(
+                    'writer -> writer,
+                    'limit -> postPerPage,
+                    'offset -> (page - 1) * postPerPage
+                )
+                .as(simple *)
+        }
+    }
+
     def findByWriter(writer: Long): Seq[Post] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM post WHERE post.writer = {writer}")
                 .on('writer -> writer)
                 .as(simple *)
+        }
+    }
+
+    def findAll(): Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM Post").as(simple *)
         }
     }
 

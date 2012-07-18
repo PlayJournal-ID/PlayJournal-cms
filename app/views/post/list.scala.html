@@ -1,4 +1,4 @@
-@(posts: Seq[models.Post])(implicit request: play.api.mvc.RequestHeader)
+@(posts: models.extra.Page[models.Post])(implicit request: play.api.mvc.RequestHeader)
 
 @import views.helper.Format
 
@@ -14,14 +14,20 @@
 		</thead>
 		<tfoot>
 			<tr>
-				<td colspan="3" style="text-align: right;"><a href="@routes.Post.create"><button class="btn btn-success">New Post</button></a></td>
+				<td colspan="2">
+   				@views.html.helper.paginator(posts.prev.map { page => routes.Post.list(page).absoluteURL(false) }.getOrElse(""),
+   					"Newer Posts",
+   					posts.next.map { page => routes.Post.list(page).absoluteURL(false) }.getOrElse(""),
+   					"Older Post")
+				</td>
+				<td style="text-align: right;"><a href="@routes.Post.create"><button class="btn btn-success">New Post</button></a></td>
 			</tr>
 		</tfoot>
 		<tbody>
-		@if(posts.isEmpty){
+		@if(posts.items.isEmpty){
 		    <tr><td colspan="2" style="text-align: center;">You have no post yet. <a href="@routes.Post.create">Create a new post!</a></td></tr>
 		}
-    	@posts.map{ post =>
+    	@posts.items.map{ post =>
     	    <tr>
     			<td>@post.title</td>
     			<td>
@@ -29,7 +35,7 @@
     			</td>
     			<td>
     				<a href="@routes.Post.edit(post.id.get)" title="edit post"><i class="icon-edit"></i></a>
-    				<a href="@routes.Post.show(post.id.get)" title="view post"><i class="icon-share-alt"></i></a>
+    				<a href="@routes.Post.show(post.id.get, post.titleSlug)" title="view post"><i class="icon-share-alt"></i></a>
     			</td>
     		</tr>
 	    }

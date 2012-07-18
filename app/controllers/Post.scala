@@ -11,6 +11,7 @@ import anorm._
 import controllers.helpers._
 import controllers.traits._
 import models._
+import models.extra.Page
 import views._
 
 object Post extends Controller with Security {
@@ -22,13 +23,13 @@ object Post extends Controller with Security {
         )((id, title, content) => models.Post(id, title, content))((post: models.Post) => Some(post.id, post.title, post.content))
     )
 
-    def list = OnlyAuthenticated { user =>
+    def list(page: Long) = OnlyAuthenticated { user =>
         implicit request =>
-            val posts = models.Post.findByWriter(SessionHelper.getUserId)
+            val posts = models.Post.getPostByWriterPaginated(SessionHelper.getUserId, page, 5)
             Ok(html.post.list(posts))
     }
 
-    def show(id: Long) = Action { implicit request =>
+    def show(id: Long, title: String = "") = Action { implicit request =>
         models.Post.findById(id) match {
             case Some(post: models.Post) => Ok(html.post.show(post))
             case _                       => NotFound
@@ -55,7 +56,7 @@ object Post extends Controller with Security {
                 try {
                     val userId: Long = SessionHelper.getUserId
                     val newPost = models.Post.create(post.title, post.content, userId)
-                    Redirect(routes.Post.show(newPost.getOrElse(0)))
+                    Redirect(routes.Post.show(newPost.getOrElse(0), post.titleSlug))
                 }
                 catch {
                     case e => {
@@ -75,7 +76,7 @@ object Post extends Controller with Security {
             post => {
                 try {
                     models.Post.update(id, post.title, post.content)
-                    Redirect(routes.Post.show(id))
+                    Redirect(routes.Post.show(id, post.titleSlug))
                 }
                 catch {
                     case e => {

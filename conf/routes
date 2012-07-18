@@ -14,11 +14,12 @@ POST   /login                       controllers.Authentication.authenticate
 GET    /logout                      controllers.Authentication.logout
 
 # Post CRUD
-GET    /post                        controllers.Post.list
+GET    /post                        controllers.Post.list(page: Long ?= 1)
 GET    /post/edit/:id               controllers.Post.edit(id: Long)
 GET    /post/new                    controllers.Post.create
 POST   /post/process/:id            controllers.Post.processPostForm(id: Long)
-GET    /post/:id                    controllers.Post.show(id: Long) 
+GET    /post/:id/:title             controllers.Post.show(id: Long, title: String) 
+GET    /post/:id                    controllers.Post.show(id: Long, title: String = "") 
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
