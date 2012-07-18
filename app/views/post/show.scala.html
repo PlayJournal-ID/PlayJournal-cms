@@ -13,7 +13,7 @@
 
 @main(post.title, "post.show", javascripts, stylesheets){
 <div class="post row">
-	<div id="controls" class="span4">
+	<div id="controls" class="span4 hidden-phone">
 		@if(SessionHelper.getUserId == post.writer){
 		    <div class="actions">
 				<h3>Actions</h3>
