@@ -26,9 +26,21 @@ object Post {
         Page(findFrontPage(page, pageSize), page, pageSize, getTotalRows())
     }
 
+    def getPostByWriterPaginated(writer: Long, page: Long, pageSize: Long = 10) = {
+        Page(findByWriterPaginated(writer, page, pageSize), page, pageSize, getTotalRowsByWriter(writer))
+    }
+
     def getTotalRows(): Long = {
         DB.withConnection { implicit connection =>
             SQL("SELECT count(post.id) FROM post").as(scalar[Long].single)
+        }
+    }
+
+    def getTotalRowsByWriter(writer: Long): Long = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT count(post.id) FROM post WHERE post.writer = {writer}")
+                .on('writer -> writer)
+                .as(scalar[Long].single)
         }
     }
 
@@ -51,11 +63,32 @@ object Post {
         }
     }
 
+    def findByWriterPaginated(writer: Long, page: Long, postPerPage: Long = 10) = {
+        DB.withConnection { implicit connection =>
+            SQL("""SELECT * FROM post WHERE post.writer = {writer}
+                       ORDER BY post.last_update DESC
+                       LIMIT {limit} OFFSET {offset}
+                """)
+                .on(
+                    'writer -> writer,
+                    'limit -> postPerPage,
+                    'offset -> (page - 1) * postPerPage
+                )
+                .as(simple *)
+        }
+    }
+
     def findByWriter(writer: Long): Seq[Post] = {
         DB.withConnection { implicit connection =>
             SQL("SELECT * FROM post WHERE post.writer = {writer}")
                 .on('writer -> writer)
                 .as(simple *)
+        }
+    }
+
+    def findAll(): Seq[Post] = {
+        DB.withConnection { implicit connection =>
+            SQL("SELECT * FROM Post").as(simple *)
         }
     }
 

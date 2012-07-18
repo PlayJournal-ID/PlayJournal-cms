@@ -11,6 +11,7 @@ import anorm._
 import controllers.helpers._
 import controllers.traits._
 import models._
+import models.extra.Page
 import views._
 
 object Post extends Controller with Security {
@@ -22,9 +23,9 @@ object Post extends Controller with Security {
         )((id, title, content) => models.Post(id, title, content))((post: models.Post) => Some(post.id, post.title, post.content))
     )
 
-    def list = OnlyAuthenticated { user =>
+    def list(page: Long) = OnlyAuthenticated { user =>
         implicit request =>
-            val posts = models.Post.findByWriter(SessionHelper.getUserId)
+            val posts = models.Post.getPostByWriterPaginated(SessionHelper.getUserId, page, 5)
             Ok(html.post.list(posts))
     }
 

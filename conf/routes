@@ -14,7 +14,7 @@ POST   /login                       controllers.Authentication.authenticate
 GET    /logout                      controllers.Authentication.logout
 
 # Post CRUD
-GET    /post                        controllers.Post.list
+GET    /post                        controllers.Post.list(page: Long ?= 1)
 GET    /post/edit/:id               controllers.Post.edit(id: Long)
 GET    /post/new                    controllers.Post.create
 POST   /post/process/:id            controllers.Post.processPostForm(id: Long)
