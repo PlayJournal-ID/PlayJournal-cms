@@ -8,7 +8,9 @@ import play.api.Play.current
 
 import models.extra.Page
 
-case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0)
+case class Post(id: Pk[Long], title: String, content: String, created: Date = new Date(), lastUpdate: Date = new Date(), writer: Long = 0) {
+    val titleSlug: String = title.toLowerCase.replace(" ", "-")
+}
 
 object Post {
     val simple = {

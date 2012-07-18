@@ -3,7 +3,7 @@
 @import views.helper.Format
 
 <div class="well post">
-	<h1><a href="@routes.Post.show(post.id.get)">@post.title</a> <br>
+	<h1><a href="@routes.Post.show(post.id.get, post.titleSlug)">@post.title</a> <br>
 		<small>by: @Users.findById(post.writer).map(u => u.name) | 
 			@Format.date(post.created)
 		</small>
@@ -11,5 +11,5 @@
 	<div class="post-content mini">
 		@Html(Format.markdown(post.content.substring(0, post.content.indexOf("\n"))))
 	</div>
-	<a href="@routes.Post.show(post.id.get)" title="read @post.title"><button class="btn btn-info">Read more</button></a>
+	<a href="@routes.Post.show(post.id.get, post.titleSlug)" title="read @post.title"><button class="btn btn-info">Read more</button></a>
 </div>
