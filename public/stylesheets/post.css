@@ -5,13 +5,58 @@
 	display: block;
 }
 
-#toc
+.actions 
 {
+	margin-bottom: 25px;
+}
+
+.actions > .btn-group 
+{
+	margin-left: 50px;
+}
+
+#controls
+{
+	height: 100%;
 	position: fixed;
-	right: 15%;
+}
+
+#controls h3
+{
+	margin-left: 25px;
 }
 
 #toc, #toc ul
 {
 	list-style: none;
 }
+
+#toc ul
+{
+}
+
+#toc > ul li
+{
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+}
+
+#toc .toc-active
+{
+	background: #EEE;
+}
+
+.toc-active > a
+{
+	color: red;
+}
+
+#toc .toc-h1 { font-weight: bold; }
+
+/* padding-left(hx) = padding-left(h(x -1)) + 20px */ 
+#toc .toc-h2 { padding-left: 30px; }
+#toc .toc-h3 { padding-left: 50px; }
+#toc .toc-h4 { padding-left: 70px; }
+#toc .toc-h5 { padding-left: 90px; }
+#toc .toc-h6 { padding-left: 110px; }

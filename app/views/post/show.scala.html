@@ -4,8 +4,7 @@
 @import views.helper.Format
 
 @javascripts = {
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.tableofcontents.min.js")"></script>
-    <script type="text/javascript" src="@routes.Assets.at("javascripts/waypoints.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.toc.min.js")"></script>
 }
 
 @stylesheets = {
@@ -14,11 +13,21 @@
 
 @main(post.title, "post.show", javascripts, stylesheets){
 <div class="post row">
-	<div class="post-content span8">
+	<div id="controls" class="span4">
 		@if(SessionHelper.getUserId == post.writer){
-		    <a href="@routes.Post.edit(post.id.getOrElse(0))"><button class="btn btn-warning">Edit Post</button></a>
+		    <div class="actions">
+				<h3>Actions</h3>
+				<div class="btn-group">
+		    		<a href="@routes.Post.edit(post.id.getOrElse(0))" class="btn btn-warning">Edit Post</a>
+		    		<a href="" class="btn btn-danger">Delete Post</a>
+				</div>
+			</div>
 		}
 		
+		<h3>Contents</h3>
+    	<ul id="toc"></ul>
+	</div>
+	<div class="post-content span8 offset4">
 		<h1>@post.title</h1>
 		<small class="author">by: @{Users.findById(post.writer).map(u => u.name)} | 
 			@Format.date(post.created)
@@ -26,18 +35,12 @@
 
     	@Html(Format.markdown(post.content))
 	</div>
-    <ul class="span2" id="toc"></ul>
 </div>
 
 <script type="text/javascript">
-    $("#toc").tableOfContents();
-    $("h1, h2, h3, h4, h5, h6").waypoint(function(){
-        $("#toc").find($("a")).css("color", "#08C"); // color based on twitter bootstrap's link color
-        
-        var id = $(this).attr("id")
-        $("#toc").find($("a")).filter(function(index){
-            return $(this).attr("href") == "#" + id;
-        }).css("color", "red");
+    $("#toc").toc({
+        'selectors': 'h1,h2,h3,h4,h5,h6',
+        'container': 'div.post-content'
     });
 </script>
 }
