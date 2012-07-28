@@ -45,4 +45,12 @@ object SiteInfo {
                 .executeInsert()
         }
     }
+
+    def update(title: String, about: String) = {
+        DB.withConnection{ implicit connection =>
+            SQL("UPDATE siteinfo SET title = {title}, about = {about} WHERE id = 1")
+                .on('title -> title, 'about -> about)
+                .executeUpdate()
+        }
+    }
 }

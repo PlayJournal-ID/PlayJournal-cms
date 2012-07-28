@@ -24,6 +24,7 @@ GET    /post/:id                    controllers.Post.show(id: Long, title: Strin
 
 # Site Administration
 GET    /admin/info                  controllers.Administration.updateSiteInfo
+POST   /admin/info                  controllers.Administration.processSiteInfo
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

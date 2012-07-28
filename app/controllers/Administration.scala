@@ -29,4 +29,19 @@ object Administration extends Controller with Security {
                 case _ => InternalServerError
             }
     }
+
+    def processSiteInfo = OnlyAuthenticated { user =>
+        implicit request =>
+            siteInfoForm.bindFromRequest.fold(
+                formWithErrors => BadRequest(html.administration.updateSiteInfo(formWithErrors)),
+                siteInfo => {
+                    try {
+                        SiteInfo.update(siteInfo.title, siteInfo.about)
+                        Redirect(routes.Application.index())
+                    } catch {
+                        case e => InternalServerError
+                    }
+                }
+            )
+    }
 }
