@@ -4,6 +4,12 @@ import anorm._
 
 object Global extends GlobalSettings {
     override def onStart(app: Application) = {
+        try {
+            SiteInfo.about
+        } catch {
+            case e => SiteInfo.create("PlayJournal", "This is an about page.")
+        }
+
         if (Privilege.findAll.isEmpty) {
             Seq(
                 Privilege(Id(1), "admin"),
