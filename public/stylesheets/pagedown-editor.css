@@ -1,16 +1,16 @@
-.post-main
+.editor-main
 {
 	float: left;
 }
 
-.post-preview
+.editor-preview
 {
 	float: right;
 	padding: 15px;
 	border: 1px dashed black;
 }
 
-.post-main, .post-preview
+.editor-main, .editor-preview
 {
 	width: 45%;
 	min-width: 400px;
@@ -89,9 +89,6 @@
 {
     left: 300px;
 }
-
-
-
 
 .wmd-prompt-background
 {

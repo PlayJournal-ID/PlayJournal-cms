@@ -3,7 +3,7 @@
 <div class="control-group @if(elements.hasErrors) { error }">
 	<div class="controls">
 		<label for="@elements.id">@elements.label</label>
-		<div class="post-main">
+		<div class="editor-main">
 			<div class="wmd-panel">
 				@if(elements.hasErrors){
 					<span class="help-inline">@elements.errors</span>
@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		
-		<div class="post-preview">
+		<div class="editor-preview">
 			<h1 id="title-preview"></h1>
 			<div id="wmd-preview" class="wmd-panel wmd-preview"></div>
 		</div>
