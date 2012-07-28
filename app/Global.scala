@@ -1,9 +1,17 @@
 import play.api._
 import models._
 import anorm._
+import play.api.mvc._
+import play.mvc.Results._
 
 object Global extends GlobalSettings {
     override def onStart(app: Application) = {
+        try {
+            SiteInfo.about
+        } catch {
+            case e => SiteInfo.create("PlayJournal", "This is an about page.")
+        }
+
         if (Privilege.findAll.isEmpty) {
             Seq(
                 Privilege(Id(1), "admin"),
@@ -29,6 +37,18 @@ object Global extends GlobalSettings {
                 )
             }
         }
+    }
+
+    override def onError(request: RequestHeader, ex: Throwable) = {
+        Results.InternalServerError(
+            views.html.global.internalServerError(ex)
+        )
+    }
+
+    override def onHandlerNotFound(request: RequestHeader): Result = {
+        Results.NotFound(
+            views.html.global.notFound(request)
+        )
     }
 
     val postContent = """In elementum platea a! Integer et parturient mid proin augue, tristique mus. Pulvinar mid velit sagittis ac nunc nascetur, eros tincidunt vut ridiculus porttitor vut mid lectus risus elementum ac, rhoncus porttitor nec ut massa? A ut, magna! Arcu augue non vel nunc turpis, non lundium egestas magnis habitasse ac nec mus vel? A. Sit cursus, quis dolor pulvinar porta dapibus aenean lacus, vut et hac eros augue velit pulvinar, non cursus, pellentesque velit aliquam.

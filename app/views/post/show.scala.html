@@ -5,10 +5,12 @@
 
 @javascripts = {
     <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.toc.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("google-code-prettify/prettify.js")"></script>
 }
 
 @stylesheets = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/post.css")">
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("google-code-prettify/prettify.css")">
 }
 
 @main(post.title, "post.show", javascripts, stylesheets){
@@ -38,9 +40,18 @@
 </div>
 
 <script type="text/javascript">
-    $("#toc").toc({
-        'selectors': 'h1,h2,h3,h4,h5,h6',
-        'container': 'div.post-content'
+    $(document).ready(function(){
+        // table of contents generation
+        $("#toc").toc({
+            'selectors': 'h1,h2,h3,h4,h5,h6',
+            'container': 'div.post-content'
+        });
+
+        // code prettify
+        $("pre").each(function(){
+            $(this).addClass("prettyprint linenums")
+        });
+        prettyPrint();
     });
 </script>
 }

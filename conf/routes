@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                           controllers.Application.index(page: Long ?= 1)
+GET     /about                      controllers.Application.about
 
 # Authentication and Registration
 GET    /signup                      controllers.Authentication.signup
@@ -19,7 +20,11 @@ GET    /post/edit/:id               controllers.Post.edit(id: Long)
 GET    /post/new                    controllers.Post.create
 POST   /post/process/:id            controllers.Post.processPostForm(id: Long)
 GET    /post/:id/:title             controllers.Post.show(id: Long, title: String) 
-GET    /post/:id                    controllers.Post.show(id: Long, title: String = "") 
+GET    /post/:id                    controllers.Post.show(id: Long, title: String = "")
+
+# Site Administration
+GET    /admin/info                  controllers.Administration.updateSiteInfo
+POST   /admin/info                  controllers.Administration.processSiteInfo
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,6 +1,7 @@
 @(title: String, section: String = "home", javascripts: Html = Html(""), stylesheets: Html = Html(""))(content: Html)(implicit request: play.api.mvc.RequestHeader)
 
 @import controllers.helpers._
+@import models.SiteInfo
 
 <!DOCTYPE html>
 
@@ -36,9 +37,10 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-    				<a class="brand" href="@routes.Application.index()">PlayJournal</a>
+    				<a class="brand" href="@routes.Application.index()">@SiteInfo.title</a>
     				<ul class="nav">
     					<li @{if(section.equals("home")) "class=active"}><a href="@routes.Application.index()">Home</a></li>
+                        <li @{if(section.equals("about")) "class=active"}><a href="@routes.Application.about">About</a></li>
     				</ul>
     					
     				<div class="nav-collapse collapse" style="height: 0px;">
@@ -52,6 +54,12 @@
     							<li><a href="@routes.Post.create">New Post</a></li>
     						</ul>
     					</li>
+                        <li class="dropdown @{if(section contains "admin") "active"}">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="@routes.Administration.updateSiteInfo">Site Info</a></li>
+                            </ul>
+                        </li>
     					<li class="divider-vertical"></li>
     					<li><a href="@routes.Authentication.logout">Log out</a></li>
     				} else {

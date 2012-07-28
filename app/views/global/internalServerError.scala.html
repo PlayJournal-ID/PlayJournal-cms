@@ -1,0 +1,30 @@
+@(ex: Throwable)
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>I crashed :(</title>
+
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("bootstrap/css/bootstrap-responsive.min.css")">
+    </head>
+    <body>
+        <div class="container">
+            <div class="hero-unit">
+                <h1>I Crashed! <small>sorry :(</small></h1>
+                <p>
+                    If you see this message, it only means one thing: something has gone terribly wrong. Please help us
+                    to improve our site by reporting the following message to site owner:
+                </p>
+                <div class="alert alert-error" style="text-align: center; font-weight: bold;">
+                    @ex.getMessage
+                </div>
+                <p>
+                    Thank you very much.
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -13,4 +13,9 @@ object Application extends Controller {
         Ok(views.html.index(posts))
     }
 
+    def about = Action { implicit request =>
+        val about = SiteInfo.about
+        Ok(views.html.about(about))
+    }
+
 }
