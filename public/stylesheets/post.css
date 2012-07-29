@@ -1,7 +1,8 @@
-.author
+.post-info
 {
-	color: #999;
+    margin-left: 3em;
 	margin-bottom: 1em;
+    margin-top: .5em;
 	display: block;
 }
 
@@ -13,6 +14,9 @@
 .actions > .btn-group 
 {
 	margin-left: 50px;
+}
+
+.post-content {
 }
 
 #controls

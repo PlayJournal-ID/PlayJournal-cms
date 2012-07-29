@@ -3,19 +3,6 @@
 	text-align: center;
 }
 
-.post > h1 > a {
-	color: inherit;
-}
-
-.post > h1 > a:hover {
-	color: blue;
-	text-decoration: none;
-}
-
-.post > h1 > a:visited {
-	color: purple;
-}
-
-.post-content {
-	text-align: justify;
+body {
+    background: #EEE;
 }

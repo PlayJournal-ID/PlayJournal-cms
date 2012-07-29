@@ -1,0 +1,32 @@
+#post-list {
+    background: #FFF;
+    padding: 1em;
+    border-radius: 5px;
+}
+
+.mini-post {
+    border-bottom: 1px solid #CCCCCC;
+    margin-bottom: 2em;
+    padding: 1em;
+}
+
+.mini-post > h1 > a {
+    color: inherit;
+}
+
+.mini-post > h1 > a:hover {
+    color: blue;
+    text-decoration: none;
+}
+
+.mini-post > h1 > a:visited {
+    color: purple;
+}
+
+.post-info {
+    margin-bottom: 1em;
+}
+
+.mini-post-content, .post-content {
+    text-align: justify;
+}

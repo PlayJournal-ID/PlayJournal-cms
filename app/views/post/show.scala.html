@@ -31,10 +31,10 @@
 	</div>
 	<div class="post-content span8 offset4">
 		<h1>@post.title</h1>
-		<small class="author">by: @{Users.findById(post.writer).map(u => u.name)} | 
-			@Format.date(post.created)
-    	</small>
-
+        <div class="post-info">
+            <i class="icon-pencil"></i> @Users.findById(post.writer).map(u => u.name) &nbsp;
+            <i class="icon-time"></i> @Format.date(post.created)
+        </div>
     	@Html(Format.markdown(post.content))
 	</div>
 </div>
@@ -44,7 +44,8 @@
         // table of contents generation
         $("#toc").toc({
             'selectors': 'h1,h2,h3,h4,h5,h6',
-            'container': 'div.post-content'
+            'container': 'div.post-content',
+            'onHighlight': function(el){}
         });
 
         // code prettify
