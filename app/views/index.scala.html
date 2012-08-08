@@ -1,6 +1,10 @@
 @(posts: models.extra.Page[Post])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
-@main("Welcome to PlayJournal") {
+@stylesheets = {
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/index.css")">
+}
+
+@main("bertzzie.com", stylesheets=stylesheets) {
 	@if(flash.get("logoutSuccess").exists(_ => true)){
     	<div class="alert alert-info">
     		<strong>Log out Success.</strong> @flash.get("logoutSuccess")
@@ -13,9 +17,9 @@
 	   	</div>
    	}
     
-   	<div class="span8">
+   	<div class="span8" id="post-list">
    		@if(posts.items.isEmpty) {
-   		    <div class="well post">
+   		    <div class="mini-post">
    				No Post to show.
    			</div>
    		}
