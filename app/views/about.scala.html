@@ -1,5 +1,9 @@
 @(about: String)(implicit request: play.api.mvc.RequestHeader)
 
+@import views.helper.Format
+
 @main("About Us", "about") {
-    @about
+    <div class="span8">
+        @Html(Format.markdown(about))
+    </div>
 }

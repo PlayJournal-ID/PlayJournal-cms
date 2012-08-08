@@ -4,7 +4,7 @@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/index.css")">
 }
 
-@main("Welcome to PlayJournal", stylesheets=stylesheets) {
+@main("bertzzie.com", stylesheets=stylesheets) {
 	@if(flash.get("logoutSuccess").exists(_ => true)){
     	<div class="alert alert-info">
     		<strong>Log out Success.</strong> @flash.get("logoutSuccess")

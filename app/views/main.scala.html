@@ -47,19 +47,23 @@
     				<ul class="nav pull-right">
     				@if(SessionHelper.isAuthenticated){
     					<li><a href="#">@SessionHelper.getUserName</a></li>
-    					<li class="dropdown @{if(section contains "post") "active"}">
-    						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Post <b class="caret"></b></a>
-    						<ul class="dropdown-menu">
-    							<li><a href="@routes.Post.list()">Your posts</a></li>
-    							<li><a href="@routes.Post.create">New Post</a></li>
-    						</ul>
-    					</li>
-                        <li class="dropdown @{if(section contains "admin") "active"}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="@routes.Administration.updateSiteInfo">Site Info</a></li>
-                            </ul>
-                        </li>
+                        @if(SessionHelper.getUserPrivilege != Privilege.standard){
+    					    <li class="dropdown @{if(section contains "post") "active"}">
+    					    	<a href="#" class="dropdown-toggle" data-toggle="dropdown">Post <b class="caret"></b></a>
+    					    	<ul class="dropdown-menu">
+    					    		<li><a href="@routes.Post.list()">Your posts</a></li>
+    					    		<li><a href="@routes.Post.create">New Post</a></li>
+    					    	</ul>
+    					    </li>
+                        }
+                        @if(SessionHelper.getUserPrivilege == Privilege.admin){
+                            <li class="dropdown @{if(section contains "admin") "active"}">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Site <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="@routes.Administration.updateSiteInfo">Site Info</a></li>
+                                </ul>
+                            </li>
+                        }
     					<li class="divider-vertical"></li>
     					<li><a href="@routes.Authentication.logout">Log out</a></li>
     				} else {
