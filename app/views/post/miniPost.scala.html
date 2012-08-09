@@ -1,6 +1,7 @@
 @(post: models.Post)
 
 @import views.helper.Format
+@import views.helper.Markdown
 
 <div class="mini-post">
 	<h1>
@@ -11,7 +12,7 @@
         <i class="icon-time"></i> @Format.date(post.created)
     </div>
 	<div class="mini-post-content">
-		@Html(Format.markdown(post.content.substring(0, post.content.indexOf("\n"))))
+		@Html(Format.markdown(Markdown.getFirstParagraph(post.content)))
 	</div>
 	<a href="@routes.Post.show(post.id.get, post.titleSlug)" title="read @post.title"><button class="btn btn-info">Read more</button></a>
 </div>
