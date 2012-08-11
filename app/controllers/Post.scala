@@ -36,16 +36,23 @@ object Post extends Controller with Security {
         }
     }
 
-    def create = OnlyAuthenticated(Privilege.admin) { user =>
+    def create = OnlyAuthenticated(Privilege.admin, Privilege.editor, Privilege.writer) { user =>
         implicit request =>
             Ok(html.post.create(postForm))
     }
 
-    def edit(id: Long) = OnlyAuthenticated(Privilege.admin) { user =>
+    def edit(id: Long) = OnlyAuthenticated(Privilege.admin, Privilege.editor, Privilege.writer) { user =>
         implicit request =>
             models.Post.findById(id) match {
-                case Some(post: models.Post) => Ok(html.post.edit(postForm.fill(post), id))
-                case _                       => NotFound
+                case Some(post: models.Post) => {
+                    if (post.writer == SessionHelper.getUserId) {
+                        Ok(html.post.edit(postForm.fill(post), id))
+                    }
+                    else {
+                        Redirect(routes.Post.show(id, post.titleSlug)).flashing("security" -> "You are not allowed to edit this post")
+                    }
+                }
+                case _ => NotFound
             }
     }
 
@@ -88,7 +95,7 @@ object Post extends Controller with Security {
         )
     }
 
-    def processPostForm(id: Long) = OnlyAuthenticated(Privilege.admin) { user =>
+    def processPostForm(id: Long) = OnlyAuthenticated(Privilege.admin, Privilege.editor, Privilege.writer) { user =>
         implicit request =>
             val referer = request.headers.get("referer").getOrElse("")
 

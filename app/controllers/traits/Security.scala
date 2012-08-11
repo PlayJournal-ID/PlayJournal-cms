@@ -21,12 +21,12 @@ trait Security {
         }
     }
 
-    def OnlyAuthenticated(privilege: Long)(f: => String => Request[AnyContent] => Result) = {
+    def OnlyAuthenticated(privilege: Long*)(f: => String => Request[AnyContent] => Result) = {
         Security.Authenticated(username, onUnauthenticated) { user =>
             Action { implicit request =>
-                (SessionHelper.getUserPrivilege(request) != privilege) match {
-                    case true  => onUnauthorized(request)
-                    case false => f(user)(request)
+                (privilege.contains(SessionHelper.getUserPrivilege)) match {
+                    case true  => f(user)(request)
+                    case false => onUnauthorized(request)
                 }
             }
         }

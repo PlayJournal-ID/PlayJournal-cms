@@ -1,4 +1,4 @@
-@(post: models.Post)(implicit request: play.api.mvc.RequestHeader)
+@(post: models.Post)(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
 @import controllers.helpers.SessionHelper
 @import views.helper.Format
@@ -30,6 +30,12 @@
     	<ul id="toc"></ul>
 	</div>
 	<div class="post-content span8 offset4">
+		@if(flash.get("security").exists(_ => true)){
+		   	<div class="alert alert-warning">
+	   			<strong>Security warning:</strong> @flash.get("security")
+			</div>
+	   	}
+		
 		<h1>@post.title</h1>
         <div class="post-info">
             <i class="icon-pencil"></i> @Users.findById(post.writer).map(u => u.name) &nbsp;
