@@ -22,15 +22,15 @@ object Administration extends Controller with Security {
         )((id, title, about) => SiteInfo(id, title, about))((info: SiteInfo) => Some(info.id, info.title, info.about))
     )
 
-    def updateSiteInfo = OnlyAuthenticated { user =>
+    def updateSiteInfo = OnlyAuthenticated(Privilege.admin) { user =>
         implicit request =>
             SiteInfo.getInfo match {
                 case Some(info: SiteInfo) => Ok(html.administration.updateSiteInfo(siteInfoForm.fill(info)))
-                case _ => InternalServerError
+                case _                    => InternalServerError
             }
     }
 
-    def processSiteInfo = OnlyAuthenticated { user =>
+    def processSiteInfo = OnlyAuthenticated(Privilege.admin) { user =>
         implicit request =>
             siteInfoForm.bindFromRequest.fold(
                 formWithErrors => BadRequest(html.administration.updateSiteInfo(formWithErrors)),
@@ -38,7 +38,8 @@ object Administration extends Controller with Security {
                     try {
                         SiteInfo.update(siteInfo.title, siteInfo.about)
                         Redirect(routes.Application.index())
-                    } catch {
+                    }
+                    catch {
                         case e => InternalServerError
                     }
                 }

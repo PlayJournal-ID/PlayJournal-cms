@@ -23,7 +23,7 @@ object Post extends Controller with Security {
         )((id, title, content) => models.Post(id, title, content))((post: models.Post) => Some(post.id, post.title, post.content))
     )
 
-    def list(page: Long) = OnlyAuthenticated { user =>
+    def list(page: Long) = OnlyAuthenticated(Privilege.admin) { user =>
         implicit request =>
             val posts = models.Post.getPostByWriterPaginated(SessionHelper.getUserId, page, 5)
             Ok(html.post.list(posts))
@@ -36,12 +36,12 @@ object Post extends Controller with Security {
         }
     }
 
-    def create = OnlyAuthenticated { user =>
+    def create = OnlyAuthenticated(Privilege.admin) { user =>
         implicit request =>
             Ok(html.post.create(postForm))
     }
 
-    def edit(id: Long) = OnlyAuthenticated { user =>
+    def edit(id: Long) = OnlyAuthenticated(Privilege.admin) { user =>
         implicit request =>
             models.Post.findById(id) match {
                 case Some(post: models.Post) => Ok(html.post.edit(postForm.fill(post), id))
@@ -88,7 +88,7 @@ object Post extends Controller with Security {
         )
     }
 
-    def processPostForm(id: Long) = OnlyAuthenticated { user =>
+    def processPostForm(id: Long) = OnlyAuthenticated(Privilege.admin) { user =>
         implicit request =>
             val referer = request.headers.get("referer").getOrElse("")
 
