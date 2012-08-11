@@ -31,4 +31,10 @@ trait Security {
             }
         }
     }
+
+    def OnlyAuthenticated(f: => String => Request[AnyContent] => Result) = {
+        Security.Authenticated(username, onUnauthenticated) { user =>
+            Action(implicit request => f(user)(request))
+        }
+    }
 }
