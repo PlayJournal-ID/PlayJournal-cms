@@ -8,7 +8,8 @@ object Global extends GlobalSettings {
     override def onStart(app: Application) = {
         try {
             SiteInfo.about
-        } catch {
+        }
+        catch {
             case e => SiteInfo.create("PlayJournal", "This is an about page.")
         }
 
@@ -47,7 +48,7 @@ object Global extends GlobalSettings {
 
     override def onHandlerNotFound(request: RequestHeader): Result = {
         Results.NotFound(
-            views.html.global.notFound(request)
+            views.html.global.notFound(request, request.flash)
         )
     }
 

@@ -5,18 +5,6 @@
 @implicitField = @{FieldConstructor(bootstrapInput.f)}
 
 @main("Login", "login") {
-    @if(flash.get("registration").exists(_ => true)){
-    	<div class="alert alert-info">
-    		@flash.get("registration")
-    	</div>
-    }
-    
-    @if(flash.get("security").exists(_ => true)){
-    	<div class="alert alert-warning">
-    		@flash.get("security")
-    	</div>
-    }
-
 	<div class="span5 hidden-phone">
 		<a href="#" class="thumbnail">
 			<img src="http://placehold.it/450x300">

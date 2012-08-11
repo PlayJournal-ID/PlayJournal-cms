@@ -1,0 +1,23 @@
+@()(implicit flash: Flash)
+
+	@* login *@
+    @if(flash.get("registration").exists(_ => true)){
+    	<div class="alert alert-info">
+    		@flash.get("registration")
+    	</div>
+    }
+    
+    @* index *@
+   	@if(flash.get("security").exists(_ => true)){
+	   	<div class="alert alert-warning">
+	   		<strong>Security warning:</strong> @flash.get("security")
+	   	</div>
+   	} 
+    
+	@if(flash.get("logoutSuccess").exists(_ => true)){
+    	<div class="alert alert-info">
+    		<strong>Log out Success.</strong> @flash.get("logoutSuccess")
+    	</div>
+    }
+    
+   	

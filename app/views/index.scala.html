@@ -5,18 +5,6 @@
 }
 
 @main("bertzzie.com", stylesheets=stylesheets) {
-	@if(flash.get("logoutSuccess").exists(_ => true)){
-    	<div class="alert alert-info">
-    		<strong>Log out Success.</strong> @flash.get("logoutSuccess")
-    	</div>
-    }
-    
-   	@if(flash.get("security").exists(_ => true)){
-	   	<div class="alert alert-warning">
-	   		<strong>Security warning:</strong> @flash.get("security")
-	   	</div>
-   	}
-    
    	<div class="span8" id="post-list">
    		@if(posts.items.isEmpty) {
    		    <div class="mini-post">
