@@ -1,4 +1,4 @@
-@(infoForm: Form[SiteInfo])(implicit request: play.api.mvc.RequestHeader)
+@(infoForm: Form[SiteInfo])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
 @stylesheets = {
 <link rel="stylesheet" href="@routes.Assets.at("stylesheets/pagedown-editor.css")">

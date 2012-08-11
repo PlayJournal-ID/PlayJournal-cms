@@ -75,8 +75,9 @@ object Authentication extends Controller with Security {
         )
     }
 
-    def logout = Action { implicit request =>
-        Redirect(routes.Application.index()).withNewSession
-            .flashing("logoutSuccess" -> "Thank you for using PlayJournal!")
+    def logout = OnlyAuthenticated { user =>
+        implicit request =>
+            Redirect(routes.Application.index()).withNewSession
+                .flashing("logoutSuccess" -> "Thank you for using PlayJournal!")
     }
 }

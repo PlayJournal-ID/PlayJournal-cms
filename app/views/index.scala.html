@@ -1,22 +1,12 @@
 @(posts: models.extra.Page[Post])(implicit request: play.api.mvc.RequestHeader, flash: Flash)
 
+@import models.SiteInfo
+
 @stylesheets = {
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/index.css")">
 }
 
-@main("bertzzie.com", stylesheets=stylesheets) {
-	@if(flash.get("logoutSuccess").exists(_ => true)){
-    	<div class="alert alert-info">
-    		<strong>Log out Success.</strong> @flash.get("logoutSuccess")
-    	</div>
-    }
-    
-   	@if(flash.get("security").exists(_ => true)){
-	   	<div class="alert alert-warning">
-	   		<strong>Security warning:</strong> @flash.get("security")
-	   	</div>
-   	}
-    
+@main(SiteInfo.title, stylesheets=stylesheets) {
    	<div class="span8" id="post-list">
    		@if(posts.items.isEmpty) {
    		    <div class="mini-post">
